@@ -2,7 +2,6 @@
 name = "trusted-properties-marketplace-solana-rust"
 description = "Blockchain based decentralized prepaid-rental marketplace. Prepaid rental agreements as smart-contract"
 version = "0.0.1"
-authors = ["Kumar Abhishek (https://abhi.page/)"]
 edition = "2018"
 
 [features]
