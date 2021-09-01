@@ -61,7 +61,7 @@ The following dependencies are required to build and run this example, depending
 on your OS, they may already be installed:
 
 - Install node (v14 recommended)
-- Install npm
+- Install npm/yarn
 - Install the latest Rust stable from https://rustup.rs/
 - Install Solana v1.7.8 or later from
   https://docs.solana.com/cli/install-solana-cli-tools

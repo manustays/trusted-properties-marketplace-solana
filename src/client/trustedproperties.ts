@@ -130,9 +130,9 @@ class AgreementAccount {
 const AgreementSchema = new Map([
 	[AgreementAccount, {kind: 'struct', fields: [
 		['pub status', 'u8'],
-		['owner_pubkey', 'Pubkey'],
-		['tenant_pubkey', 'Pubkey'],
-		['security_escrow_pubkey', 'Pubkey'],
+		['owner_pubkey', 'string'],
+		['tenant_pubkey', 'string'],
+		['security_escrow_pubkey', 'string'],
 		['security_deposit', 'u64'],
 		['rent_amount', 'u64'],
 		['duration', 'u8'],
@@ -146,15 +146,16 @@ const AgreementSchema = new Map([
 /**
  * The expected size of each Agreement account.
  */
-const AGREEMENT_SIZE = borsh.serialize(
-	AgreementSchema,
-	new AgreementAccount(),
-).length;
+const AGREEMENT_SIZE = // 120;
+	borsh.serialize(
+		AgreementSchema,
+		new AgreementAccount(),
+	).length;
 
 
 /**
  * The state of an Security-Escrow account managed by the Trusted-Properties program
- */
+ * /
 class EscrowAccount {
 
 	status: number = 0;
@@ -182,30 +183,31 @@ class EscrowAccount {
 			this.remaining_deposit = fields.remaining_deposit;
 		}
 	}
-}
+} */
 
 /**
  * Borsh schema definition for Escrow accounts
- */
+ * /
 const EscrowSchema = new Map([
 	[EscrowAccount, { kind: 'struct', fields: [
 		['status', 'u8'],
-		['agreement_pubkey', 'Pubkey'],
-		['owner_pubkey', 'Pubkey'],
-		['tenant_pubkey', 'Pubkey'],
+		['agreement_pubkey', 'string'],
+		['owner_pubkey', 'string'],
+		['tenant_pubkey', 'string'],
 		['security_deposit', 'u64'],
 		['remaining_deposit', 'u64']
 	] }],
 ]);
+*/
 
 /**
  * The expected size of each Escrow account.
- */
+ * /
 const ESCROW_SIZE = borsh.serialize(
 	EscrowSchema,
 	new EscrowAccount(),
 ).length;
-
+*/
 
 
 
@@ -231,8 +233,8 @@ export async function establishPayer(): Promise<void> {
 
 		// Calculate the cost to fund the greeter account
 		rentExemptForAgreement = await connection.getMinimumBalanceForRentExemption(AGREEMENT_SIZE);
-		rentExemptForEscrow = await connection.getMinimumBalanceForRentExemption(ESCROW_SIZE);
-		fees += (rentExemptForAgreement + rentExemptForEscrow);
+		// rentExemptForEscrow = await connection.getMinimumBalanceForRentExemption(ESCROW_SIZE);
+		fees += (rentExemptForAgreement /* + rentExemptForEscrow */ );
 
 		// Calculate the cost of sending transactions
 		fees += feeCalculator.lamportsPerSignature * 100; // wag
@@ -258,7 +260,7 @@ export async function establishPayer(): Promise<void> {
 
 	console.log(
 		'Using the "Company" account',
-		payer.publicKey.toBase58(),
+		payer.publicKey?.toBase58(),
 		'containing',
 		lamports / LAMPORTS_PER_SOL,
 		'SOL to pay for fees',
@@ -297,10 +299,15 @@ export async function checkProgram(): Promise<void> {
 	} else if (!programInfo.executable) {
 		throw new Error(`Program is not executable`);
 	}
-	console.log(`Using program ${programId.toBase58()}`);
+	console.log(`Using program ${programId?.toBase58()}`);
+
+	// TODO: Get from app user
+	ownerPubkey = new PublicKey("EJBCNzigNdKMiCueXNaYn3CccMJqmB8DLPZKgfeTWQrh");
+	tenantPubkey = new PublicKey("EGikG1URSBTi3Dc2AHwTV4HBDWu1KmbcD63rTbYWv9Cu");
+
 
 	// Derive the address (public key) of a Agreement account from the program so that it's easy to find later.
-	const AGREEMENT_SEED = 'agreement' + ownerPubkey + tenantPubkey;
+	const AGREEMENT_SEED = 'agreement' + ownerPubkey.toString() + tenantPubkey.toString();
 	agreementPubkey = await PublicKey.createWithSeed(
 		payer.publicKey,
 		AGREEMENT_SEED,
@@ -311,9 +318,8 @@ export async function checkProgram(): Promise<void> {
 	const agreementAccount = await connection.getAccountInfo(agreementPubkey);
 	if (agreementAccount === null) {
 		console.log(
-			'Creating Agreement account',
-			agreementPubkey.toBase58(),
-			'to say hello to',
+			'Creating new Agreement Contract account: ',
+			agreementPubkey.toBase58()
 		);
 		const lamports = await connection.getMinimumBalanceForRentExemption(
 			AGREEMENT_SIZE,
@@ -357,10 +363,12 @@ export async function initContract(): Promise<void> {
 			{ pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
 		],
 		programId,
-		data: Buffer.from(Uint8Array.of(instruction_index,
+		data:
+		// Buffer.alloc(0)
+		Buffer.from(Uint8Array.of(instruction_index,
 			...Array.from(ownerPubkey.toBytes()),
 			...Array.from(tenantPubkey.toBytes()),
-			...Array.from(escrowPubkey.toBytes()),
+			...Array.from(agreementPubkey.toBytes()),			// DEBUG: SHOULD BE: escrowPubkey
 			...new BN(deposit).toArray("le", 64),
 			...new BN(rentAmount).toArray("le", 64),
 			...new BN(duration).toArray("le", 8),
