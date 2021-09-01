@@ -7,6 +7,7 @@
   "scripts": {
     "start": "ts-node src/client/main.ts",
     "start-with-test-validator": "start-server-and-test 'solana-test-validator --reset --quiet' http://localhost:8899/health start",
+    "deploy": "solana program deploy dist/program/trusted_properties_marketplace_solana_rust.so",
     "lint": "eslint --ext .ts src/client/* && prettier --check \"src/client/**/*.ts\"",
     "lint:fix": "eslint --ext .ts src/client/* --fix && prettier --write \"src/client/**/*.ts\"",
     "build": "cargo build-bpf --manifest-path=./src/program-rust/Cargo.toml --bpf-out-dir=dist/program",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@solana/web3.js": "^1.7.0",
+    "bn.js": "^5.2.0",
     "borsh": "^0.6.0",
     "mz": "^2.7.0",
     "yaml": "^1.10.2"

@@ -2,8 +2,8 @@ import {
   establishConnection,
   establishPayer,
   checkProgram,
-  sayHello,
-  reportGreetings,
+  initContract,
+//   reportGreetings,
 } from './trustedproperties';
 
 async function main() {
@@ -18,11 +18,11 @@ async function main() {
   // Check if the program has been deployed
   await checkProgram();
 
-  // Say hello to an account
-  await sayHello();
+  // Initialize Agreement account
+  await initContract();
 
   // Find out how many times that account has been greeted
-  await reportGreetings();
+//   await reportGreetings();
 
   console.log('Success');
 }

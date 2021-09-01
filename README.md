@@ -69,7 +69,7 @@ on your OS, they may already be installed:
 If this is your first time using Rust, these [Installation
 Notes](README-installation-notes.md) might be helpful.
 
-### Configure CLI 
+### Configure CLI
 
 > If you're on Windows, it is recommended to use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to run these commands
 
@@ -215,7 +215,7 @@ to store program state (number of hello's processed).
 
 The client then constructs and sends a "Hello" transaction to the program by
 calling
-[`sayHello`](https://github.com/solana-labs/example-helloworld/blob/ad52dc719cdc96d45ad8e308e8759abf4792b667/src/client/hello_world.ts#L209).
+[`initContract`](https://github.com/solana-labs/example-helloworld/blob/ad52dc719cdc96d45ad8e308e8759abf4792b667/src/client/hello_world.ts#L209).
 The transaction contains a single very simple instruction that primarily carries
 the public key of the helloworld program account to call and the "greeter"
 account to which the client wishes to say "Hello" to.
@@ -244,7 +244,7 @@ The program is written using:
 To learn more about Solana programming model refer to the [Programming Model
 Overview](https://docs.solana.com/developing/programming-model/overview).
 
-To learn more about developing programs on Solana refer to the [On-Chain 
+To learn more about developing programs on Solana refer to the [On-Chain
 Programs Overview](https://docs.solana.com/developing/on-chain-programs/overview)
 
 ## Pointing to a public Solana cluster
