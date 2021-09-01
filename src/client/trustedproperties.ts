@@ -350,6 +350,8 @@ export async function initContract(): Promise<void> {
 	console.log('Initializing rent agreement contract at address: ', agreementPubkey.toBase58());
 
 	const instruction_index = 0;
+
+	// TODO: TESTING
 	const deposit = 1000;
 	const rentAmount = 500;
 	const duration = 11;
@@ -359,7 +361,7 @@ export async function initContract(): Promise<void> {
 	const instruction: TransactionInstruction = new TransactionInstruction({
 		keys: [
 			{ pubkey: agreementPubkey, isSigner: false, isWritable: true },
-			{ pubkey: escrowPubkey, isSigner: false, isWritable: true },
+			{ pubkey: agreementPubkey, isSigner: false, isWritable: true },			// TODO: escrowPubkey
 			{ pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
 		],
 		programId,
